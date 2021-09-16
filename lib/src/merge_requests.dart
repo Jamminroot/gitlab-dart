@@ -15,12 +15,7 @@ class MergeRequestsApi {
   }
 
   Future<List<MergeRequest>> list(
-      {MergeRequestState state,
-      MergeRequestOrderBy orderBy,
-      MergeRequestSort sort,
-      int page,
-      int perPage,
-      List<int> iids}) async {
+      {MergeRequestState? state, MergeRequestOrderBy? orderBy, MergeRequestSort? sort, int? page, int? perPage, List<int>? iids}) async {
     final queryParameters = <String, dynamic>{};
 
     if (state != null) queryParameters['state'] = _enumToString(state);
@@ -30,8 +25,7 @@ class MergeRequestsApi {
       queryParameters['iids[]'] = iids.map((iid) => iid.toString());
     }
 
-    final uri = _project.buildUri(['merge_requests'],
-        queryParameters: queryParameters, page: page, perPage: perPage);
+    final uri = _project.buildUri(['merge_requests'], queryParameters: queryParameters, page: page, perPage: perPage);
 
     final jsonList = _responseToList(await _gitLab.request(uri));
 

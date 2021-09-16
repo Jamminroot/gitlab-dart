@@ -20,7 +20,7 @@ class SnippetsApi {
     return await _gitLab.request(uri, asJson: false) as String;
   }
 
-  Future<List<Snippet>> list({int page, int perPage}) async {
+  Future<List<Snippet>> list({int? page, int? perPage}) async {
     final uri = _project.buildUri(['snippets'], page: page, perPage: perPage);
 
     final jsonList = _responseToList(await _gitLab.request(uri));
@@ -28,8 +28,7 @@ class SnippetsApi {
     return jsonList.map((json) => new Snippet.fromJson(json)).toList();
   }
 
-  Future update(int id,
-      {String title, String fileName, String code, String visibility}) async {
+  Future update(int id, {String? title, String? fileName, String? code, String? visibility}) async {
     final queryParameters = <String, dynamic>{};
 
     if (title != null) queryParameters['title'] = title;
@@ -37,8 +36,7 @@ class SnippetsApi {
     if (code != null) queryParameters['code'] = code;
     if (visibility != null) queryParameters['visibility'] = '$visibility';
 
-    final uri = _project
-        .buildUri(['snippets', '$id'], queryParameters: queryParameters);
+    final uri = _project.buildUri(['snippets', '$id'], queryParameters: queryParameters);
 
     final json = await _gitLab.request(uri, method: HttpMethod.put) as Map;
 

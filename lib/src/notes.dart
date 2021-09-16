@@ -7,17 +7,16 @@ class IssueNotesApi {
   final ProjectsApi _project;
   final String _iid;
 
-  IssueNotesApi(this._gitLab, this._project, int issueIid)
-      : _iid = issueIid.toString();
+  IssueNotesApi(this._gitLab, this._project, int issueIid) : _iid = issueIid.toString();
 
   /// Retrieves the list of notes of an issue.
   ///
   /// See https://docs.gitlab.com/ee/api/notes.html#list-project-issue-notes
-  Future<List<Note>> list({
-    NoteOrderBy orderBy,
-    NoteSort sort,
-    int page,
-    int perPage,
+  Future<List<Note?>> list({
+    NoteOrderBy? orderBy,
+    NoteSort? sort,
+    int? page,
+    int? perPage,
   }) async {
     final queryParameters = <String, dynamic>{};
 
@@ -56,8 +55,7 @@ class IssueNotesApi {
       queryParameters: {"body": body},
     );
 
-    final json = await _gitLab.request(uri, method: HttpMethod.post)
-        as Map<String, dynamic>;
+    final json = await _gitLab.request(uri, method: HttpMethod.post) as Map<String, dynamic>;
 
     return Note.fromJson(json);
   }
@@ -71,8 +69,7 @@ class IssueNotesApi {
       queryParameters: {"body": body},
     );
 
-    final json = await _gitLab.request(uri, method: HttpMethod.put)
-        as Map<String, dynamic>;
+    final json = await _gitLab.request(uri, method: HttpMethod.put) as Map<String, dynamic>;
 
     return Note.fromJson(json);
   }
@@ -105,25 +102,22 @@ class Note {
         noteableType = note.getStringOrNull("noteable_type"),
         noteableIid = note.getIntOrNull("noteable_iid");
 
-  static List<Note> fromJsonList(List notes) => notes
-      .map((n) => n is Map<String, dynamic> ? Note.fromJson(n) : null)
-      .where((note) => note != null)
-      .toList();
+  static List<Note?> fromJsonList(List notes) => notes.map((n) => n is Map<String, dynamic> ? Note.fromJson(n) : null).where((note) => note != null).toList();
 
-  final int id;
-  String type;
-  String body;
+  final int? id;
+  String? type;
+  String? body;
 
-  Author author;
+  Author? author;
 
-  DateTime createdAt;
-  DateTime updatedAt;
+  DateTime? createdAt;
+  DateTime? updatedAt;
 
-  bool isSystemNote;
+  bool? isSystemNote;
 
-  int noteableId;
-  String noteableType;
-  int noteableIid;
+  int? noteableId;
+  String? noteableType;
+  int? noteableIid;
 }
 
 class Author {
@@ -135,10 +129,10 @@ class Author {
         avatarUrl = author.getStringOrNull("avatar_url"),
         webUrl = author.getStringOrNull("web_url");
 
-  final int id;
-  String name;
-  String username;
-  String state;
-  String avatarUrl;
-  String webUrl;
+  final int? id;
+  String? name;
+  String? username;
+  String? state;
+  String? avatarUrl;
+  String? webUrl;
 }

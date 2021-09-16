@@ -14,8 +14,7 @@ class IssuesApi {
     return new Issue.fromJson(json);
   }
 
-  Future<List<Issue>> closedByMergeRequest(int mergeRequestIid,
-      {int page, int perPage}) async {
+  Future<List<Issue>> closedByMergeRequest(int mergeRequestIid, {int? page, int? perPage}) async {
     final uri = _project.buildUri(
       ['merge_requests', '$mergeRequestIid', 'closes_issues'],
       page: page,
@@ -28,13 +27,7 @@ class IssuesApi {
   }
 
   Future<List<Issue>> list(
-      {IssueState state,
-      IssueOrderBy orderBy,
-      IssueSort sort,
-      String milestone,
-      List<String> labels,
-      int page,
-      int perPage}) async {
+      {IssueState? state, IssueOrderBy? orderBy, IssueSort? sort, String? milestone, List<String>? labels, int? page, int? perPage}) async {
     final queryParameters = <String, dynamic>{};
 
     if (state != null) queryParameters['state'] = _enumToString(state);
@@ -43,8 +36,7 @@ class IssuesApi {
     if (milestone != null) queryParameters['milestone'] = milestone;
     if (labels != null) queryParameters['labels'] = labels.join(',');
 
-    final uri = _project.buildUri(['issues'],
-        queryParameters: queryParameters, page: page, perPage: perPage);
+    final uri = _project.buildUri(['issues'], queryParameters: queryParameters, page: page, perPage: perPage);
 
     final jsonList = _responseToList(await _gitLab.request(uri));
 
@@ -72,16 +64,12 @@ class Issue {
   List<String> get labels => (originalJson['labels'] as List).cast<String>();
   String get webUrl => originalJson['web_url'] as String;
 
-  DateTime get createdAt =>
-      DateTime.parse(originalJson['created_at'] as String);
-  DateTime get updatedAt =>
-      DateTime.parse(originalJson['updated_at'] as String);
+  DateTime get createdAt => DateTime.parse(originalJson['created_at'] as String);
+  DateTime get updatedAt => DateTime.parse(originalJson['updated_at'] as String);
 
   bool get subscribed => originalJson['subscribed'] as bool;
   int get userNotesCount => originalJson['user_notes_count'] as int;
-  DateTime get dueDate => originalJson['due_date'] == null
-      ? null
-      : DateTime.parse(originalJson['due_date'] as String);
+  DateTime? get dueDate => originalJson['due_date'] == null ? null : DateTime.parse(originalJson['due_date'] as String);
 
   bool get confidential => originalJson['confidential'] as bool;
   int get weight => originalJson['weight'] as int;

@@ -14,20 +14,14 @@ class CommitsApi {
     return new Commit.fromJson(json);
   }
 
-  Future<List<Commit>> list(
-      {String refName,
-      DateTime since,
-      DateTime until,
-      int page,
-      int perPage}) async {
+  Future<List<Commit>> list({String? refName, DateTime? since, DateTime? until, int? page, int? perPage}) async {
     final queryParameters = <String, dynamic>{};
 
     if (refName != null) queryParameters['ref_name'] = refName;
     if (since != null) queryParameters['since'] = _formatDate(since);
     if (until != null) queryParameters['until'] = _formatDate(until);
 
-    final uri = _project.buildUri(['repository', 'commits'],
-        queryParameters: queryParameters, page: page, perPage: perPage);
+    final uri = _project.buildUri(['repository', 'commits'], queryParameters: queryParameters, page: page, perPage: perPage);
 
     final jsonList = _responseToList(await _gitLab.request(uri));
 
@@ -45,10 +39,8 @@ class Commit {
   String get title => originalJson['title'] as String;
   String get message => originalJson['message'] as String;
   String get status => originalJson['status'] as String;
-  DateTime get createdAt =>
-      DateTime.parse(originalJson['created_at'] as String);
-  DateTime get committedDate =>
-      DateTime.parse(originalJson['committed_date'] as String);
+  DateTime get createdAt => DateTime.parse(originalJson['created_at'] as String);
+  DateTime get committedDate => DateTime.parse(originalJson['committed_date'] as String);
 
   @override
   String toString() => 'Commit id#$id ($title)';

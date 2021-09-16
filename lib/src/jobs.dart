@@ -24,7 +24,7 @@ class JobsApi {
     return new Job.fromJson(json);
   }
 
-  Future<List<Job>> list({List<JobScope> scopes, int page, int perPage}) async {
+  Future<List<Job>> list({List<JobScope>? scopes, int? page, int? perPage}) async {
     final queryParameters = <String, dynamic>{};
 
     if (scopes != null && scopes.isNotEmpty) {
@@ -37,8 +37,7 @@ class JobsApi {
       }
     }
 
-    final uri = _project.buildUri(['jobs'],
-        queryParameters: queryParameters, page: page, perPage: perPage);
+    final uri = _project.buildUri(['jobs'], queryParameters: queryParameters, page: page, perPage: perPage);
     final jsonList = _responseToList(await _gitLab.request(uri));
 
     return jsonList.map((json) => new Job.fromJson(json)).toList();
@@ -57,12 +56,9 @@ class Job {
   String get ref => originalJson['ref'] as String;
   String get stage => originalJson['stage'] as String;
   String get status => originalJson['status'] as String;
-  DateTime get startedAt =>
-      DateTime.parse(originalJson['started_at'] as String);
-  DateTime get createdAt =>
-      DateTime.parse(originalJson['created_at'] as String);
-  DateTime get finishedAt =>
-      DateTime.parse(originalJson['finished_at'] as String);
+  DateTime get startedAt => DateTime.parse(originalJson['started_at'] as String);
+  DateTime get createdAt => DateTime.parse(originalJson['created_at'] as String);
+  DateTime get finishedAt => DateTime.parse(originalJson['finished_at'] as String);
   Commit get commit => new Commit.fromJson(originalJson['commit'] as Map);
 
   @override
